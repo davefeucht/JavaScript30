@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>JS Drum Kit</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+
+  <div class="keys">
+    <div data-key="65" class="key">
+      <kbd>A</kbd>
+      <span class="sound">clap</span>
+    </div>
+    <div data-key="83" class="key">
+      <kbd>S</kbd>
+      <span class="sound">hihat</span>
+    </div>
+    <div data-key="68" class="key">
+      <kbd>D</kbd>
+      <span class="sound">kick</span>
+    </div>
+    <div data-key="70" class="key">
+      <kbd>F</kbd>
+      <span class="sound">openhat</span>
+    </div>
+    <div data-key="71" class="key">
+      <kbd>G</kbd>
+      <span class="sound">boom</span>
+    </div>
+    <div data-key="72" class="key">
+      <kbd>H</kbd>
+      <span class="sound">ride</span>
+    </div>
+    <div data-key="74" class="key">
+      <kbd>J</kbd>
+      <span class="sound">snare</span>
+    </div>
+    <div data-key="75" class="key">
+      <kbd>K</kbd>
+      <span class="sound">tom</span>
+    </div>
+    <div data-key="76" class="key">
+      <kbd>L</kbd>
+      <span class="sound">tink</span>
+    </div>
+  </div>
+
+  <audio data-key="65" src="sounds/clap.wav"></audio>
+  <audio data-key="83" src="sounds/hihat.wav"></audio>
+  <audio data-key="68" src="sounds/kick.wav"></audio>
+  <audio data-key="70" src="sounds/openhat.wav"></audio>
+  <audio data-key="71" src="sounds/boom.wav"></audio>
+  <audio data-key="72" src="sounds/ride.wav"></audio>
+  <audio data-key="74" src="sounds/snare.wav"></audio>
+  <audio data-key="75" src="sounds/tom.wav"></audio>
+  <audio data-key="76" src="sounds/tink.wav"></audio>
+
+<script>
+
+  //Function to apply styles to key elements when pressed and to play associated sound files
+  function playSound(keyEvent) {
+    //Get the elements in the page associated with the pressed key
+    let display_element = document.querySelector(`.key[data-key="${keyEvent.keyCode}"]`); 
+    let sound_element = document.querySelector(`audio[data-key="${keyEvent.keyCode}"]`);
+    //If the key pressed matches one of the sound keys
+    if(display_element) {
+      //Play the sound and add the 'playing' class to the display element
+      sound_element.currentTime = 0;
+      sound_element.play();
+      display_element.classList.add("playing"); 
+    }
+    //Otherwise, end the program
+    else {
+      return;
+    }
+  }
+
+  //Function to remove the styling from the element upon the end of the transition
+  function removeTransition(transitionEvent) {
+    //If the event passed in is not a transform, end program
+    if(transitionEvent.propertyName !== "transform") {
+      return;
+    }
+    //Otherwise, remove the 'playing' class from the element
+    else {
+      this.classList.remove("playing");
+    }
+  }
+
+  //Get a list of all the key display elements, and add removeTransition as a
+  //'transitionend' event handler for each one
+  const keys = document.querySelectorAll(".key");
+  keys.forEach(key => key.addEventListener('transitionend', removeTransition));
+
+  //Add an event handler for 'keydown' which calls the playSound function
+  document.addEventListener("keydown", playSound);
+
+</script>
+
+
+</body>
+</html>
