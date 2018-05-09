@@ -81,7 +81,7 @@
 
     //Setup a class which holds the current clock state, with a function runClock that
     //creates a new clock state, updates it and returns it
-    class clockTime {
+    class ClockTime {
 
       constructor(seconds, minutes, hours) {
         this.tick_degrees = 360 / 60;
@@ -102,7 +102,7 @@
         }
 
         let time = new Date();
-        let newClock = new clockTime(time.getSeconds(), time.getMinutes(), time.getHours());
+        let newClock = new ClockTime(time.getSeconds(), time.getMinutes(), time.getHours());
         return newClock;
       }
     }
@@ -111,7 +111,7 @@
     let time = new Date();
 
     //Create an initial clock state
-    let clock = new clockTime(time.getSeconds(), time.getMinutes(), time.getHours());
+    let clock = new ClockTime(time.getSeconds(), time.getMinutes(), time.getHours());
     
     //Function which runs the clock to get a new state and updates the hands based on the new state
     function moveClock() {
