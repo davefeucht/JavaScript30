@@ -73,9 +73,6 @@
     </div>
 
   <script>
-    //Set a const which is how many degrees to increment each time around the clock
-    const TICK_DEGREES = 360 / 60;
-    const HOUR_DEGREES = 360 / 12;
 
     //Get the DOM elements for the clock hands
     const second_hand = document.querySelector(".second-hand");
@@ -85,9 +82,10 @@
     //Setup a class which holds the current clock state, with a function runClock that
     //creates a new clock state, updates it and returns it
     class clockTime {
-      constructor(tick_degrees, hour_degrees, seconds, minutes, hours) {
-        this.tick_degrees = tick_degrees;
-        this.hour_degrees = hour_degrees;
+
+      constructor(seconds, minutes, hours) {
+        this.tick_degrees = 360 / 60;
+        this.hour_degrees = 360 / 12;;
         this.second_angle = (seconds * this.tick_degrees) + 90;
         this.minute_angle = (minutes * this.tick_degrees) + 90;
         this.hour_angle = (hours * this.hour_degrees) + 90;
@@ -104,7 +102,7 @@
         }
 
         let time = new Date();
-        let newClock = new clockTime(this.tick_degrees, this.hour_degrees, time.getSeconds(), time.getMinutes(), time.getHours());
+        let newClock = new clockTime(time.getSeconds(), time.getMinutes(), time.getHours());
         return newClock;
       }
     }
@@ -113,7 +111,7 @@
     let time = new Date();
 
     //Create an initial clock state
-    let clock = new clockTime(TICK_DEGREES, HOUR_DEGREES, time.getSeconds(), time.getMinutes(), time.getHours());
+    let clock = new clockTime(time.getSeconds(), time.getMinutes(), time.getHours());
     
     //Function which runs the clock to get a new state and updates the hands based on the new state
     function moveClock() {
