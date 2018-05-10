@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoped CSS Variables and JS</title>
+</head>
+<body>
+  <h2>Update CSS Variables with <span class='hl'>JS</span></h2>
+
+  <div class="controls">
+    <label for="spacing">Spacing:</label>
+    <input id="spacing" type="range" name="spacing" min="10" max="200" value="10" data-units="px">
+
+    <label for="blur">Blur:</label>
+    <input id="blur" type="range" name="blur" min="0" max="25" value="10" data-units="px">
+
+    <label for="base-color">Base Color</label>
+    <input id="base-color" type="color" name="base-color" value="#ffc600">
+  </div>
+
+  <img src="https://source.unsplash.com/7bwQXzbF6KE/800x500">
+
+  <style>
+    :root {
+      --base-color: #CCCCCC;
+      --spacing: 10px;
+      --blur: 10px;
+    }
+
+    img {
+      padding: var(--spacing);
+      background: var(--base-color);
+      filter: blur(var(--blur));
+    }
+
+    .hl {
+      color: var(--base-color);
+    }
+
+    body {
+      text-align: center;
+      background: #193549;
+      color: white;
+      font-family: 'helvetica neue', sans-serif;
+      font-weight: 100;
+      font-size: 50px;
+    }
+    .controls {
+      margin-bottom: 50px;
+    }
+    input {
+      width:100px;
+    }
+  </style>
+
+  <script>
+    //Set a variable flag to determine if mouse/touch is active
+    let mouse_down = false;
+    
+    //Define event handlers to detect mouse/touch activity
+    document.body.addEventListener("mousedown", () => {
+      mouse_down = true;
+    });
+
+    document.body.addEventListener("mouseup", () => {
+      mouse_down = false;
+    });
+
+    //Function to handle change of input values
+    function inputChange(change_event) {
+      //Set the suffix based on the data-units attribute of the input
+      const suffix = this.dataset.units || '';
+      //If the input is a range and the mouse is down, or the input is not a range
+      if((change_event.target.type === "range" && mouse_down) || (change_event.target.type !== "range")) {
+        //Update the value of the CSS variable based on the value of the input
+        document.documentElement.style.setProperty(`--${this.id}`, this.value + suffix);
+      }
+    }
+
+    //Get all the inputs in our controls group
+    let inputs = document.querySelectorAll(".controls input");
+
+    //Loop the inputs and add event handlers to handle change and move events on them
+    for (let input of inputs) {
+      input.addEventListener("change", inputChange);
+      input.addEventListener("mousemove", inputChange);
+      input.addEventListener("touchmove", inputChange);
+    }
+  </script>
+
+</body>
+</html>
