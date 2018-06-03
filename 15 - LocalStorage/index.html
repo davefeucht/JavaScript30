@@ -33,9 +33,7 @@
 <script>
   const addItems = document.querySelector(".add-items");
   const itemsList = document.querySelector(".plates");
-  const clearListButton = document.querySelector(".clear-list");
-  const checkAllButton = document.querySelector(".check-all");
-  const uncheckAllButton = document.querySelector(".uncheck-all");
+  const metaButtons = document.querySelector(".meta-buttons");
   const items = JSON.parse(sessionStorage.getItem("items")) || [];
   
   //type === 0, then toggle, type === 1 then set to true, type === 2 then set to false
@@ -56,6 +54,22 @@
     sessionStorage.setItem("items", JSON.stringify(items));
   }
  
+  function updateList(click_event) {
+    console.log(click_event.target.className);
+    if(click_event.target.className === "clear-list") {
+      clearList();
+    }
+    else if(click_event.target.className === "check-all") {
+      checkAll();
+    }
+    else if(click_event.target.className === "uncheck-all") {
+      uncheckAll();
+    }
+    else {
+      return;
+    }
+  }
+
   function clearList() {
     items.splice(0, items.length);
     sessionStorage.setItem("items", JSON.stringify(items));
@@ -116,10 +130,7 @@
 
   addItems.addEventListener("submit", addItem);
   itemsList.addEventListener("click", toggleDone);
-  clearListButton.addEventListener("click", clearList);
-  checkAllButton.addEventListener("click", checkAll);
-  uncheckAllButton.addEventListener("click", uncheckAll);
-
+  metaButtons.addEventListener("click", updateList);
   populateList(items, itemsList);
 
 </script>
