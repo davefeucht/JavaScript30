@@ -23,41 +23,107 @@
       <input type="text" name="item" placeholder="Item Name" required>
       <input type="submit" value="+ Add Item">
     </form>
+    <div class="meta-buttons">
+      <button class="clear-list">Clear List</button>
+      <button class="check-all">Check All</button>
+      <button class="uncheck-all">Uncheck All</button>
+    </div>
   </div>
 
 <script>
-  const addItems = document.querySelector('.add-items');
-  const itemsList = document.querySelector('.plates');
-  const items = [];
+  const addItems = document.querySelector(".add-items");
+  const itemsList = document.querySelector(".plates");
+  const clearListButton = document.querySelector(".clear-list");
+  const checkAllButton = document.querySelector(".check-all");
+  const uncheckAllButton = document.querySelector(".uncheck-all");
+  const items = JSON.parse(sessionStorage.getItem("items")) || [];
+  
+  //type === 0, then toggle, type === 1 then set to true, type === 2 then set to false
+  function toggleInputs(element, type) {
+    const targetElementIndex = element.dataset.index;
+    if(type === 0) {
+      items[targetElementIndex].done = !items[targetElementIndex].done;
+    }
+    else if(type === 1) {
+      items[targetElementIndex].done = true;
+    }
+    else if(type === 2) {
+      items[targetElementIndex].done = false;
+    }
+    else {
+      return;
+    }
+    sessionStorage.setItem("items", JSON.stringify(items));
+  }
+ 
+  function clearList() {
+    items.splice(0, items.length);
+    sessionStorage.setItem("items", JSON.stringify(items));
+    populateList(items, itemsList);
+  }
+  
+  function checkAll() {
+    const inputs = document.querySelectorAll('input[type="checkbox"]');
+    for(const input of inputs) {
+      toggleInputs(input, 1); 
+    }
+    populateList(items, itemsList);
+  }
+
+  function uncheckAll() {
+    const inputs = document.querySelectorAll('input[type="checkbox"]');
+    for(const input of inputs) {
+      toggleInputs(input, 2); 
+    }
+    populateList(items, itemsList);
+  }
+  
+  function toggleDone(click_event) {
+    if(!click_event.target.matches("input")) {
+      return;
+    }
+    else {
+      toggleInputs(click_event.target, 0);
+    }
+  }
 
   function addItem(submit_event) {
     submit_event.preventDefault(); 
     const textInput = this.querySelector('[name="item"]');
-    
+  
     const text = textInput.value;
     const newItem = {
       text: text,
       done: false
-    }
+    }; 
+
     items.push(newItem);
     populateList(items, itemsList);
+    sessionStorage.setItem("items", JSON.stringify(items));
     this.reset();
   }
 
   function populateList(plates = [], container) {
-    container.innerHTML = plates.map(plate => {
+    container.innerHTML = plates.map((plate, index) => {
       return `
         <li>
-          <label for="">${plate.text}</label>
+          <input type="checkbox" data-index=${index} id="item${index}" ${plate.done ? "checked" : ""}/>
+          <label for="item${index}">${plate.text}</label>
         </li>
       `;
     }).join(""); 
   }
 
   addItems.addEventListener("submit", addItem);
+  itemsList.addEventListener("click", toggleDone);
+  clearListButton.addEventListener("click", clearList);
+  checkAllButton.addEventListener("click", checkAll);
+  uncheckAllButton.addEventListener("click", uncheckAll);
+
+  populateList(items, itemsList);
+
 </script>
 
 
 </body>
 </html>
-
